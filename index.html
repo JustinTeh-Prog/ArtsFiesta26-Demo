@@ -23,6 +23,7 @@ a:hover{color:#F3E2D5}
 @keyframes afBeamSway{from{transform:rotate(-26deg)}to{transform:rotate(-14deg)}}
 @keyframes afBeamSwayR{from{transform:scaleX(-1) rotate(-26deg)}to{transform:scaleX(-1) rotate(-14deg)}}
 @keyframes afLens{0%,100%{opacity:.85}50%{opacity:1}}
+@keyframes afSweep{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 @keyframes afDrift{from{transform:translateY(0) rotate(-.6deg)}to{transform:translateY(-10px) rotate(.6deg)}}
 @media (prefers-reduced-motion: reduce){
   [data-anim]{animation:none !important}
@@ -37,20 +38,99 @@ a:hover{color:#F3E2D5}
 <div aria-hidden="true" style="position:fixed;inset:0;pointer-events:none;z-index:80;opacity:{{ grainOpacity }};mix-blend-mode:soft-light;background-image:url('data:image/svg+xml;utf8,%3Csvg%20xmlns=%22http://www.w3.org/2000/svg%22%20width=%22240%22%20height=%22240%22%3E%3Cfilter%20id=%22n%22%3E%3CfeTurbulence%20type=%22fractalNoise%22%20baseFrequency=%220.9%22%20numOctaves=%222%22%20stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect%20width=%22240%22%20height=%22240%22%20filter=%22url(%23n)%22/%3E%3C/svg%3E');background-size:240px 240px"></div>
 
 <!-- slim progress nav -->
-<nav aria-label="Sections" style="position:fixed;right:14px;top:50%;transform:translateY(-50%);z-index:60;display:flex;flex-direction:column;gap:12px;align-items:flex-end">
+<nav aria-label="Sections" style="position:fixed;top:14px;right:16px;z-index:60;display:flex;gap:2px;flex-wrap:wrap;justify-content:flex-end;background:rgba(13,6,9,0.82);border:1px solid rgba(215,203,177,0.2);border-radius:3px;padding:4px;backdrop-filter:blur(6px)">
   <sc-for list="{{ navItems }}" as="n" hint-placeholder-count="6">
-    <a href="{{ n.href }}" aria-label="{{ n.label }}" onMouseEnter="{{ n.enter }}" onMouseLeave="{{ n.leave }}" onFocus="{{ n.enter }}" onBlur="{{ n.leave }}" style="display:flex;align-items:center;gap:10px;text-decoration:none;padding:2px 0">
-      <span style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.66rem;letter-spacing:0.18em;color:#F3E2D5;background:rgba(13,6,9,0.9);border:1px solid rgba(215,203,177,0.28);padding:0.3rem 0.65rem;border-radius:2px;white-space:nowrap;pointer-events:none;opacity:{{ n.labelOpacity }};transform:translateX({{ n.labelShift }});transition:opacity 180ms, transform 180ms cubic-bezier(0.22,0.8,0.2,1)">{{ n.labelText }}</span>
-      <span style="display:block;width:10px;height:14px;border:1px solid rgba(215,203,177,0.4);border-radius:5px 5px 2px 2px;background:{{ n.dotBg }};transition:background 180ms"></span>
-    </a>
+    <a href="{{ n.href }}" style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.64rem;letter-spacing:0.16em;color:#9E9A90;text-decoration:none;padding:0.45rem 0.7rem;border-radius:2px;white-space:nowrap;transition:color 160ms, background 160ms" style-hover="color:#F3E2D5;background:rgba(149,57,57,0.35)">{{ n.labelText }}</a>
   </sc-for>
 </nav>
 
 <!-- ============ HERO ============ -->
 <section id="hero" data-screen-label="Hero" style="position:relative;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;overflow:hidden;background:radial-gradient(ellipse 90% 60% at 50% 40%, #211316 0%, #0D0609 62%)">
-  <!-- poster key art -->
-  <div style="position:relative;width:min(1040px,97vw);margin-top:clamp(0.5rem,3vh,2rem)">
-    <img src="uploads/title.jpg" alt="Arts Fiesta 2026 key art — a hand-lettered ARTS FIESTA wordmark lit by the beams of an illustrated spiral lighthouse" style="display:block;width:100%;height:auto;mask-image:radial-gradient(ellipse 72% 70% at 50% 46%, black 50%, transparent 99%);-webkit-mask-image:radial-gradient(ellipse 72% 70% at 50% 46%, black 50%, transparent 99%)">
+  <!-- poster key art (native render) -->
+  <div style="position:relative;width:clamp(200px,24vw,300px);margin-top:clamp(1.5rem,5vh,3.5rem)">
+    <!-- rotating spotlight sweep, pivoting at the lens -->
+    <div aria-hidden="true" style="position:absolute;left:50%;top:13.75%;width:0;height:0;z-index:1;mix-blend-mode:screen">
+      <div data-anim="sweep" style="position:absolute;left:-46vw;top:-46vw;width:92vw;height:92vw;animation:afSweep 9s linear infinite;background:conic-gradient(from 262deg, transparent 0deg, rgba(243,226,213,0.30) 7deg, rgba(243,226,213,0.46) 8deg, rgba(243,226,213,0.30) 9deg, transparent 16deg, transparent 180deg, rgba(243,226,213,0.30) 187deg, rgba(243,226,213,0.46) 188deg, rgba(243,226,213,0.30) 189deg, transparent 196deg);filter:blur(6px);mask-image:radial-gradient(circle, transparent 3%, black 10%, black 55%, transparent 72%);-webkit-mask-image:radial-gradient(circle, transparent 3%, black 10%, black 55%, transparent 72%)"></div>
+      <div data-anim="lensPulse" style="position:absolute;left:-5vw;top:-5vw;width:10vw;height:10vw;border-radius:50%;background:radial-gradient(circle, rgba(243,226,213,0.6) 0%, rgba(243,226,213,0.14) 45%, transparent 70%);animation:afLens 5s ease-in-out infinite"></div>
+      <!-- static side beams carrying the words -->
+      <div data-anim="beam" style="position:absolute;left:0;top:-8vw;width:56vw;height:16vw;transform-origin:0 50%;transform:rotate(-8deg);background:linear-gradient(90deg, rgba(243,226,213,0.34), rgba(215,203,177,0.14) 42%, rgba(215,203,177,0.04) 72%, transparent 94%);clip-path:polygon(0 45%, 0 55%, 100% 100%, 100% 0);filter:blur(5px)"></div>
+      <div data-anim="beam" style="position:absolute;left:0;top:-8vw;width:56vw;height:16vw;transform-origin:0 50%;transform:scaleX(-1) rotate(-8deg);background:linear-gradient(90deg, rgba(243,226,213,0.34), rgba(215,203,177,0.14) 42%, rgba(215,203,177,0.04) 72%, transparent 94%);clip-path:polygon(0 45%, 0 55%, 100% 100%, 100% 0);filter:blur(5px)"></div>
+    </div>
+    <!-- beam words -->
+    <div aria-hidden="true" style="position:absolute;right:107%;top:4%;z-index:2;font-family:'Grenze',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,8vw,7.5rem);letter-spacing:0.03em;color:#8A3232;transform:rotate(-7deg);white-space:nowrap;text-shadow:0 0 38px rgba(243,226,213,0.3)">ARTS</div>
+    <div aria-hidden="true" style="position:absolute;left:107%;top:4%;z-index:2;font-family:'Grenze',Georgia,serif;font-weight:600;font-size:clamp(2.6rem,8vw,7.5rem);letter-spacing:0.03em;color:#8A3232;transform:rotate(7deg);white-space:nowrap;text-shadow:0 0 38px rgba(243,226,213,0.3)">FIESTA</div>
+    <!-- lighthouse render -->
+    <svg role="img" aria-label="Rendered lighthouse with a satellite-dish crown, glowing lens, spiral cream ribbon and floating base discs" viewBox="0 0 300 560" style="position:relative;z-index:3;display:block;width:100%;height:auto">
+      <defs>
+        <radialGradient id="afGlow" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#F3E2D5" stop-opacity="0.95"></stop>
+          <stop offset="40%" stop-color="#F3E2D5" stop-opacity="0.3"></stop>
+          <stop offset="100%" stop-color="#F3E2D5" stop-opacity="0"></stop>
+        </radialGradient>
+        <linearGradient id="afGRed" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#5E2323"></stop><stop offset="22%" stop-color="#8A3232"></stop><stop offset="50%" stop-color="#A64545"></stop><stop offset="78%" stop-color="#8A3232"></stop><stop offset="100%" stop-color="#521E1E"></stop>
+        </linearGradient>
+        <linearGradient id="afGMauve" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#61505A"></stop><stop offset="25%" stop-color="#8B7681"></stop><stop offset="50%" stop-color="#AB96A1"></stop><stop offset="78%" stop-color="#8B7681"></stop><stop offset="100%" stop-color="#574752"></stop>
+        </linearGradient>
+        <linearGradient id="afGCream" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#BCA890"></stop><stop offset="30%" stop-color="#F3E2D5"></stop><stop offset="70%" stop-color="#E8D2C0"></stop><stop offset="100%" stop-color="#AE9B84"></stop>
+        </linearGradient>
+        <linearGradient id="afGDark" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#2A171B"></stop><stop offset="50%" stop-color="#57383D"></stop><stop offset="100%" stop-color="#241317"></stop>
+        </linearGradient>
+      </defs>
+      <circle data-anim="lens" cx="150" cy="77" r="58" fill="url(#afGlow)" style="animation:afLens 5s ease-in-out infinite"></circle>
+      <!-- satellite dish -->
+      <g transform="rotate(-16 150 38)">
+        <line x1="150" y1="38" x2="150" y2="14" stroke="#3A2326" stroke-width="3"></line>
+        <ellipse cx="150" cy="34" rx="44" ry="14" fill="url(#afGCream)" stroke="#3A2326" stroke-width="2"></ellipse>
+        <path d="M150 34 L128 28 M150 34 L172 28 M150 34 L150 20" stroke="#8A3232" stroke-width="2" fill="none"></path>
+        <line x1="150" y1="34" x2="150" y2="52" stroke="#3A2326" stroke-width="4"></line>
+      </g>
+      <!-- roof cone -->
+      <path d="M126 64 L174 64 L150 46 Z" fill="url(#afGRed)" stroke="#2A171B" stroke-width="1.5"></path>
+      <!-- lantern -->
+      <path d="M132 64 L168 64 L168 92 L132 92 Z" fill="url(#afGDark)"></path>
+      <circle cx="150" cy="78" r="11" fill="#F3E2D5"></circle>
+      <circle cx="150" cy="78" r="5.5" fill="#FFFFFF"></circle>
+      <!-- gallery disc -->
+      <path d="M106 96 L194 96 L194 105 A44 11 0 0 1 106 105 Z" fill="url(#afGCream)"></path>
+      <ellipse cx="150" cy="96" rx="44" ry="11" fill="#F3E2D5"></ellipse>
+      <!-- red disc -->
+      <path d="M112 114 L188 114 L188 122 A38 9 0 0 1 112 122 Z" fill="url(#afGRed)"></path>
+      <ellipse cx="150" cy="114" rx="38" ry="9" fill="#A64545"></ellipse>
+      <!-- tower -->
+      <path d="M122 126 L178 126 L198 430 L102 430 Z" fill="url(#afGMauve)"></path>
+      <!-- spiral cream ribbon -->
+      <g stroke="url(#afGCream)" stroke-width="22" stroke-linecap="round" fill="none">
+        <path d="M120 164 Q150 190 182 152"></path>
+        <path d="M114 242 Q150 270 189 228"></path>
+        <path d="M108 320 Q150 350 195 304"></path>
+        <path d="M101 398 Q150 430 201 380"></path>
+      </g>
+      <!-- ribbon under-shadows for depth -->
+      <g stroke="#2A171B" stroke-width="3" stroke-linecap="round" fill="none" opacity="0.28">
+        <path d="M120 176 Q150 202 182 164"></path>
+        <path d="M114 254 Q150 282 189 240"></path>
+        <path d="M108 332 Q150 362 195 316"></path>
+        <path d="M101 410 Q150 442 201 392"></path>
+      </g>
+      <!-- windows -->
+      <path d="M143 205 a7 8 0 0 1 14 0 v11 h-14 z" fill="#2A171B"></path>
+      <path d="M145 207 a5 6 0 0 1 10 0 v7 h-10 z" fill="#F3E2D5"></path>
+      <path d="M143 283 a7 8 0 0 1 14 0 v11 h-14 z" fill="#2A171B"></path>
+      <path d="M145 285 a5 6 0 0 1 10 0 v7 h-10 z" fill="#F3E2D5"></path>
+      <path d="M143 361 a7 8 0 0 1 14 0 v11 h-14 z" fill="#2A171B"></path>
+      <path d="M145 363 a5 6 0 0 1 10 0 v7 h-10 z" fill="#F3E2D5"></path>
+      <!-- base flare -->
+      <path d="M102 430 L198 430 L208 454 L92 454 Z" fill="url(#afGRed)"></path>
+      <!-- floating disc -->
+      <path d="M96 490 L204 490 L204 498 A54 12 0 0 1 96 498 Z" fill="url(#afGRed)"></path>
+      <ellipse cx="150" cy="490" rx="54" ry="12" fill="#A64545"></ellipse>
+      <!-- floating pebble -->
+      <ellipse cx="150" cy="534" rx="9" ry="7" fill="url(#afGRed)"></ellipse>
+    </svg>
   </div>
 
   <!-- lockup text -->
@@ -60,9 +140,8 @@ a:hover{color:#F3E2D5}
   </h1>
   <p style="z-index:4;max-width:44ch;margin:1.1rem clamp(1.25rem,4vw,5rem) 0;text-align:center;font-size:clamp(1.02rem,1.4vw,1.25rem);line-height:1.5;color:#D7CBB1">One rooftop. Twelve student arts groups. An evening of music, movement, theatre, art and making.</p>
   <p style="z-index:4;margin:1rem 0 0;text-align:center;font-size:clamp(0.9rem,1.1vw,1.05rem);line-height:1.8;color:#9E9A90">
-    Arts Fiesta 2026 happening at *SCAPE Treetop<br>
     <span style="color:#D7CBB1">2 October 2026 · 2:00 PM – 8:00 PM</span><br>
-    *SCAPE Treetop, Singapore · <span style="color:#9E9A90">Venue Partner — *SCAPE</span>
+    *SCAPE Treetop <span style="color:#F3E2D5;background:rgba(149,57,57,0.45);border:1px solid rgba(149,57,57,0.8);border-radius:2px;padding:0.1rem 0.5rem;font-family:'Jost',sans-serif;font-weight:600;font-size:0.82em;letter-spacing:0.12em">LEVEL 5</span>, Singapore
   </p>
 
   <!-- countdown -->
@@ -114,21 +193,12 @@ a:hover{color:#F3E2D5}
     <h2 data-reveal="" style="margin:0 0 0.9rem;font-family:'Jost','Kabel Black',sans-serif;font-weight:800;font-size:clamp(2rem,4vw,3.6rem);line-height:1;color:#953939">ARTS FIESTA 2025</h2>
     <p data-reveal="" style="margin:0;max-width:52ch;font-size:clamp(1rem,1.3vw,1.2rem);line-height:1.7;color:#9E9A90">A moving stream of performances, people and small moments from last year's Arts Fiesta.</p>
   </div>
-  <div style="margin-top:3.5rem;display:flex;flex-direction:column;gap:14px">
-    <div data-ribbon="1" style="display:flex;gap:14px;width:max-content;will-change:transform">
-      <sc-for list="{{ photosRow1 }}" as="ph" hint-placeholder-count="6">
-        <button type="button" onClick="{{ ph.open }}" style="padding:0;border:1px solid rgba(215,203,177,0.14);background:#1B1B1D;border-radius:6px;overflow:hidden;cursor:pointer;flex:0 0 auto" style-hover="border-color:rgba(215,203,177,0.5)" style-focus="outline:2px solid #F3E2D5;outline-offset:2px">
-          <img src="{{ ph.src }}" alt="{{ ph.alt }}" loading="lazy" width="390" height="260" style="display:block;width:390px;height:260px;object-fit:cover;filter:saturate(0.82) contrast(0.97);transition:filter 300ms" style-hover="filter:saturate(1) contrast(1)">
-        </button>
-      </sc-for>
-    </div>
-    <div data-ribbon="2" style="display:flex;gap:14px;width:max-content;will-change:transform;transform:translateX(-260px)">
-      <sc-for list="{{ photosRow2 }}" as="ph" hint-placeholder-count="6">
-        <button type="button" onClick="{{ ph.open }}" style="padding:0;border:1px solid rgba(215,203,177,0.14);background:#1B1B1D;border-radius:6px;overflow:hidden;cursor:pointer;flex:0 0 auto" style-hover="border-color:rgba(215,203,177,0.5)" style-focus="outline:2px solid #F3E2D5;outline-offset:2px">
-          <img src="{{ ph.src }}" alt="{{ ph.alt }}" loading="lazy" width="390" height="260" style="display:block;width:390px;height:260px;object-fit:cover;filter:saturate(0.82) contrast(0.97);transition:filter 300ms" style-hover="filter:saturate(1) contrast(1)">
-        </button>
-      </sc-for>
-    </div>
+  <div style="max-width:1200px;margin:3.5rem auto 0;padding:0 clamp(1.25rem,4vw,5rem);display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px">
+    <sc-for list="{{ photosAll }}" as="ph" hint-placeholder-count="12">
+      <button type="button" onClick="{{ ph.open }}" data-reveal="" style="padding:0;border:1px solid rgba(215,203,177,0.14);background:#1B1B1D;border-radius:6px;overflow:hidden;cursor:pointer" style-hover="border-color:rgba(215,203,177,0.5)" style-focus="outline:2px solid #F3E2D5;outline-offset:2px">
+        <img src="{{ ph.src }}" alt="{{ ph.alt }}" loading="lazy" style="display:block;width:100%;aspect-ratio:3/2;height:auto;object-fit:cover;filter:saturate(0.82) contrast(0.97);transition:filter 300ms" style-hover="filter:saturate(1) contrast(1)">
+      </button>
+    </sc-for>
   </div>
   <div style="text-align:center;margin-top:3rem">
     <a href="https://flic.kr/s/aHBqjCxdN1" target="_blank" rel="noopener noreferrer" style="font-family:'Jost',sans-serif;font-weight:700;letter-spacing:0.2em;font-size:0.86rem;color:#F3E2D5;text-decoration:none;border-bottom:2px solid #953939;padding:0.5rem 0.2rem" style-hover="border-bottom-color:#F3E2D5">OPEN THE FULL 2025 ALBUM ↗</a>
@@ -161,18 +231,15 @@ a:hover{color:#F3E2D5}
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:16px">
       <sc-for list="{{ clubs }}" as="c" hint-placeholder-count="12">
-        <article data-reveal="" tabindex="0" style="position:relative;border:1px solid rgba(215,203,177,0.16);border-radius:4px;background:rgba(13,6,9,0.5);padding:1.4rem 1.3rem 1.3rem;transition:border-color 240ms, background 240ms" style-hover="border-color:rgba(215,203,177,0.42);background:linear-gradient(115deg, rgba(243,226,213,0.06) 0%, rgba(13,6,9,0.5) 45%)" style-focus="outline:2px solid #F3E2D5;outline-offset:2px;border-color:rgba(215,203,177,0.42)">
-          <svg aria-hidden="true" viewBox="0 0 48 48" style="width:44px;height:44px;margin-bottom:0.9rem;display:block">
-            <path d="{{ c.glyph }}" fill="none" stroke="#9F8C96" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
-          </svg>
-          <h3 style="margin:0 0 0.5rem;font-family:'Jost','Kabel Black',sans-serif;font-weight:700;font-size:1.12rem;letter-spacing:0.03em;color:#F3E2D5">{{ c.name }}</h3>
+        <a data-reveal="" href="{{ c.ig }}" target="_blank" rel="noopener noreferrer" style="display:block;text-decoration:none;position:relative;border:1px solid rgba(215,203,177,0.16);border-radius:4px;background:rgba(13,6,9,0.5);padding:1.4rem 1.3rem 1.3rem;transition:border-color 240ms, background 240ms" style-hover="border-color:rgba(215,203,177,0.42);background:linear-gradient(115deg, rgba(243,226,213,0.06) 0%, rgba(13,6,9,0.5) 45%)" style-focus="outline:2px solid #F3E2D5;outline-offset:2px;border-color:rgba(215,203,177,0.42)">
+          <h3 style="margin:0 0 0.5rem;font-family:'Jost','Kabel Black',sans-serif;font-weight:700;font-size:1.12rem;letter-spacing:0.03em;color:#F3E2D5">{{ c.name }} <span aria-hidden="true" style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.72rem;letter-spacing:0.14em;color:#953939">↗ IG</span></h3>
           <p style="margin:0 0 0.9rem;font-size:0.98rem;line-height:1.55;color:#9E9A90">{{ c.desc }}</p>
           <div style="display:flex;gap:6px;flex-wrap:wrap">
             <sc-for list="{{ c.tagList }}" as="t" hint-placeholder-count="2">
               <span style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.66rem;letter-spacing:0.18em;color:{{ t.color }};border:1px solid {{ t.border }};padding:0.28rem 0.55rem;border-radius:2px">{{ t.label }}</span>
             </sc-for>
           </div>
-        </article>
+        </a>
       </sc-for>
     </div>
   </div>
@@ -228,7 +295,7 @@ a:hover{color:#F3E2D5}
         <h3 style="margin:0;font-family:'Jost',sans-serif;font-weight:700;font-size:1.1rem;letter-spacing:0.06em;color:#F3E2D5">THE TREETOP AT A GLANCE</h3>
         <span style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.66rem;letter-spacing:0.22em;color:#4E5A5A">STYLISED FLOORPLAN — NOT TO SCALE</span>
       </div>
-      <svg role="img" aria-label="Stylised floorplan of *SCAPE Treetop: hexagonal main event hall with the main stage at the top, booths and a photobooth along its edges, workshop room on the left wing beside an out-of-bound holding area, and the event holding area with booths leading to the ingress at the bottom right" viewBox="0 0 800 620" style="display:block;width:100%;max-width:860px;margin:0 auto;height:auto;font-family:'Jost',sans-serif">
+      <svg role="img" aria-label="Stylised floorplan of *SCAPE Treetop: hexagonal main event hall with the main stage at the top, booths and a photobooth along its edges, workshop room on the left wing beside an out-of-bound holding area, and the event holding area connecting to the entrance corridor with three booths at the bottom right" viewBox="0 0 800 620" style="display:block;width:100%;max-width:860px;margin:0 auto;height:auto;font-family:'Jost',sans-serif">
         <defs>
           <pattern id="afHatch" width="10" height="10" patternTransform="rotate(45)" patternUnits="userSpaceOnUse">
             <line x1="0" y1="0" x2="0" y2="10" stroke="#D7CBB1" stroke-width="1" opacity="0.12"></line>
@@ -244,30 +311,44 @@ a:hover{color:#F3E2D5}
         <circle cx="500" cy="252" r="31" fill="none" stroke="#4E5A5A" stroke-width="1.1" opacity="0.5"></circle>
         <text x="500" y="345" text-anchor="middle" font-size="14" font-weight="600" letter-spacing="2.5" fill="#9E9A90">MAIN EVENT HALL</text>
         <!-- main stage -->
-        <rect x="437" y="66" width="126" height="54" rx="2" fill="#953939" stroke="#211316" stroke-width="1.5"></rect>
-        <text x="500" y="98" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2" fill="#F3E2D5">MAIN STAGE</text>
-        <g transform="rotate(-24 404 146)"><rect x="382" y="132" width="44" height="28" fill="#2F3737" stroke="#4E5A5A" stroke-width="1.2"></rect></g>
-        <g transform="rotate(24 596 146)"><rect x="574" y="132" width="44" height="28" fill="#2F3737" stroke="#4E5A5A" stroke-width="1.2"></rect></g>
+        <g onMouseEnter="{{ fpEnterStage }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpStage }};transition:opacity 200ms">
+          <rect x="437" y="66" width="126" height="54" rx="2" fill="#953939" stroke="#211316" stroke-width="1.5"></rect>
+          <text x="500" y="98" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2" fill="#F3E2D5">MAIN STAGE</text>
+          <g transform="rotate(-24 404 146)"></g>
+          <g transform="rotate(24 596 146)"></g>
+        </g>
         <!-- booths on hall edges -->
-        <g transform="rotate(-62 330 320)"><rect x="298" y="306" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="330" y="323" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
-        <g transform="rotate(62 668 300)"><rect x="618" y="286" width="100" height="26" rx="2" fill="#4D2C2F" stroke="#D7CBB1" stroke-width="1.4"></rect><text x="668" y="303" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">PHOTOBOOTH</text></g>
+        <g onMouseEnter="{{ fpEnterBooths }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpBooths }};transition:opacity 200ms" transform="rotate(60 364 326)"><rect x="332" y="313" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="364" y="330" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
+        <g onMouseEnter="{{ fpEnterPhotobooth }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpPhotobooth }};transition:opacity 200ms" transform="rotate(-60 646 294)"><rect x="596" y="281" width="100" height="26" rx="2" fill="#4D2C2F" stroke="#D7CBB1" stroke-width="1.4"></rect><text x="646" y="298" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">PHOTOBOOTH</text></g>
         <!-- event holding area -->
-        <path d="M386 394 L614 392 L610 468 L390 470 Z" fill="rgba(78,90,90,0.08)" stroke="#4E5A5A" stroke-width="1.4" opacity="0.9"></path>
-        <text x="500" y="437" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="2" fill="#9E9A90">EVENT HOLDING AREA</text>
+        <g onMouseEnter="{{ fpEnterEventholding }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpEventholding }};transition:opacity 200ms">
+          <path d="M386 394 L614 392 L610 468 L626 575 L378 546 L378 450 Z" fill="rgba(78,90,90,0.08)" stroke="#4E5A5A" stroke-width="1.4" opacity="0.9"></path>
+          <text x="505" y="478" text-anchor="middle" font-size="12.5" font-weight="600" letter-spacing="2" fill="#9E9A90">CONNECTOR</text>
+        </g>
         <!-- holding area (out of bound) -->
-        <path d="M96 316 L380 400 L380 450 L120 396 Z" fill="url(#afHatchRed)" stroke="#953939" stroke-width="1.6" stroke-dasharray="7 5"></path>
-        <g transform="rotate(11 230 378)"><text x="230" y="378" text-anchor="middle" font-size="11.5" font-weight="600" letter-spacing="1.5" fill="#C97A7A">HOLDING AREA · OUT OF BOUND</text></g>
+        <g onMouseEnter="{{ fpEnterHolding }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpHolding }};transition:opacity 200ms">
+          <path d="M286 220 L386 394 L378 450 L130 400 Z" fill="url(#afHatchRed)" stroke="#953939" stroke-width="1.6" stroke-dasharray="7 5"></path>
+          <g transform="rotate(14 265 380)"><text x="265" y="374" text-anchor="middle" font-size="11.5" font-weight="600" letter-spacing="1.5" fill="#C97A7A">HOLDING AREA</text><text x="265" y="391" text-anchor="middle" font-size="11.5" font-weight="600" letter-spacing="1.5" fill="#C97A7A">OUT OF BOUND</text></g>
+        </g>
         <!-- workshop room -->
-        <path d="M120 402 L378 456 L378 546 L98 522 Z" fill="url(#afHatch)" stroke="#9F8C96" stroke-width="1.8"></path>
-        <rect x="180" y="466" width="132" height="30" rx="2" fill="#953939" stroke="#211316" stroke-width="1.5"></rect>
-        <text x="246" y="485" text-anchor="middle" font-size="11.5" font-weight="700" letter-spacing="1.5" fill="#F3E2D5">WORKSHOP ROOM</text>
-        <g transform="rotate(12 330 528)"><rect x="298" y="514" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="330" y="531" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
+        <g onMouseEnter="{{ fpEnterWorkshop }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpWorkshop }};transition:opacity 200ms">
+          <path d="M120 402 L378 456 L378 546 L98 522 Z" fill="url(#afHatch)" stroke="#9F8C96" stroke-width="1.8"></path>
+          <text x="246" y="486" text-anchor="middle" font-size="14" font-weight="600" letter-spacing="2.5" fill="#9E9A90">WORKSHOP ROOM</text>
+        </g>
+        <g onMouseEnter="{{ fpEnterBooths }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpBooths }};transition:opacity 200ms" transform="rotate(11.8 297 454)"><rect x="265" y="441" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="297" y="458" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
         <!-- ingress -->
-        <path d="M612 440 L756 486 L736 566 L600 512 Z" fill="rgba(78,90,90,0.06)" stroke="#4E5A5A" stroke-width="1.4"></path>
-        <g transform="rotate(18 652 486)"><rect x="620" y="473" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="652" y="490" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
-        <g transform="rotate(18 706 532)"><rect x="674" y="519" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="706" y="536" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
-        <text x="672" y="598" text-anchor="middle" font-size="13" font-weight="700" letter-spacing="2.5" fill="#D7CBB1">INGRESS ↗</text>
+        <g onMouseEnter="{{ fpEnterIngress }}" onMouseLeave="{{ fpLeave }}" style="cursor:pointer;opacity:{{ fpOpIngress }};transition:opacity 200ms">
+          <path d="M614 392 L778 462 L774 628 L626 575 L610 468 Z" fill="rgba(78,90,90,0.06)" stroke="#4E5A5A" stroke-width="1.4"></path>
+          <g transform="rotate(19.7 704 589)"><rect x="672" y="576" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="704" y="593" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
+          <g transform="rotate(23.1 700 444)"><rect x="668" y="431" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="700" y="448" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
+          <g transform="rotate(91.4 758 545)"><rect x="726" y="532" width="64" height="26" rx="2" fill="#4D2C2F" stroke="#953939" stroke-width="1.4"></rect><text x="758" y="549" text-anchor="middle" font-size="11" font-weight="600" letter-spacing="1.5" fill="#F3E2D5">BOOTH</text></g>
+          <text x="688" y="505" text-anchor="middle" font-size="14" font-weight="600" letter-spacing="2.5" fill="#9E9A90">ENTRANCE</text>
+        </g>
       </svg>
+      <div aria-live="polite" style="margin-top:1.4rem;border:1px solid rgba(215,203,177,0.16);border-left:3px solid #953939;border-radius:2px;background:rgba(27,27,29,0.6);padding:1rem 1.2rem;min-height:3.4rem">
+        <div style="font-family:'Jost',sans-serif;font-weight:700;font-size:0.78rem;letter-spacing:0.24em;color:#F3E2D5;margin-bottom:0.35rem">{{ fpTitle }}</div>
+        <p style="margin:0;font-size:0.95rem;line-height:1.55;color:#9E9A90">{{ fpText }}</p>
+      </div>
       <div style="display:flex;gap:1.6rem;flex-wrap:wrap;margin-top:1.4rem;justify-content:center">
         <span style="display:inline-flex;align-items:center;gap:8px;font-family:'Jost',sans-serif;font-weight:600;font-size:0.68rem;letter-spacing:0.16em;color:#9E9A90"><span style="width:14px;height:10px;background:#953939;border-radius:2px"></span>STAGE / WORKSHOP</span>
         <span style="display:inline-flex;align-items:center;gap:8px;font-family:'Jost',sans-serif;font-weight:600;font-size:0.68rem;letter-spacing:0.16em;color:#9E9A90"><span style="width:14px;height:10px;background:#4D2C2F;border:1px solid #953939;border-radius:2px"></span>BOOTHS</span>
@@ -333,8 +414,6 @@ a:hover{color:#F3E2D5}
         
       </div>
       <div style="display:flex;flex-direction:column;gap:0.7rem;font-size:0.95rem">
-        <a href="#programme" style="text-decoration:none;color:#9E9A90" style-hover="color:#F3E2D5">Programme</a>
-        <a href="https://flic.kr/s/aHBqjCxdN1" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#9E9A90" style-hover="color:#F3E2D5">Arts Fiesta 2025 Album ↗</a>
         <a href="https://root.sutd.edu.sg/student-life/stu-org-directory" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#9E9A90" style-hover="color:#F3E2D5">ROOT Student Organisation Directory ↗</a>
         <a href="https://www.instagram.com/sutdarts/" target="_blank" rel="noopener noreferrer" style="text-decoration:none;color:#9E9A90" style-hover="color:#F3E2D5">Instagram — @sutdarts ↗</a>
         <a href="mailto:arts@rep.sutd.edu.sg" style="text-decoration:none;color:#9E9A90" style-hover="color:#F3E2D5">Contact us — arts@rep.sutd.edu.sg</a>
@@ -342,15 +421,15 @@ a:hover{color:#F3E2D5}
       <div style="display:flex;gap:14px;flex-wrap:wrap">
         <div style="display:flex;flex-direction:column;gap:0.6rem">
           <span style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.64rem;letter-spacing:0.24em;color:#4E5A5A">VENUE SPONSOR</span>
-          <div style="background:#EFEBED;border-radius:4px;padding:14px 18px;display:flex;align-items:center;justify-content:center;width:150px;height:56px">
-            <img src="uploads/asset/logos/Scape_Logo.png" alt="*SCAPE" style="max-width:100%;max-height:100%;object-fit:contain">
-          </div>
+          <a href="https://www.scape.sg/" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;width:160px;height:64px">
+            <img src="uploads/asset/logos/Scape_Logo.webp" alt="*SCAPE" style="width:100%;height:40px;object-fit:contain">
+          </a>
         </div>
         <div style="display:flex;flex-direction:column;gap:0.6rem">
           <span style="font-family:'Jost',sans-serif;font-weight:600;font-size:0.64rem;letter-spacing:0.24em;color:#4E5A5A">FOOD SPONSOR</span>
-          <div style="background:#EFEBED;border-radius:4px;padding:8px;display:flex;align-items:center;justify-content:center;width:150px;height:56px">
-            <img src="uploads/asset/logos/gomgom_logo.png" alt="Gom Gom" style="max-width:100%;max-height:100%;object-fit:contain">
-          </div>
+          <a href="https://www.instagram.com/gomgom.sg/?hl=en" target="_blank" rel="noopener noreferrer" style="display:flex;align-items:center;justify-content:center;width:148px;height:64px">
+            <img src="assets/gomgom_logo_dark_cropped.png" alt="Gom Gom" style="width:100%;height:64px;object-fit:contain">
+          </a>
         </div>
       </div>
     </div>
@@ -366,7 +445,7 @@ a:hover{color:#F3E2D5}
   &quot;grainOpacity&quot;: { &quot;editor&quot;: &quot;range&quot;, &quot;default&quot;: 0.1, &quot;min&quot;: 0, &quot;max&quot;: 0.22, &quot;step&quot;: 0.005, &quot;tsType&quot;: &quot;number&quot;, &quot;section&quot;: &quot;Atmosphere&quot; }
 }">
 class Component extends DCLogic {
-  state = { now: Date.now(), filter: 'All', lightbox: -1, openProg: null, hoverNav: null };
+  state = { now: Date.now(), filter: 'All', lightbox: -1, openProg: null, hoverNav: null, fpZone: null };
 
   componentDidMount() {
     this._tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
@@ -398,25 +477,6 @@ class Component extends DCLogic {
       });
       this._io = io;
     }
-    // photo ribbons drift with scroll
-    if (!reduced) {
-      this._onScroll = () => {
-        if (this._raf) return;
-        this._raf = requestAnimationFrame(() => {
-          this._raf = null;
-          const sec = document.getElementById('photostream');
-          const r1 = document.querySelector('[data-ribbon="1"]');
-          const r2 = document.querySelector('[data-ribbon="2"]');
-          if (!sec || !r1 || !r2) return;
-          const rect = sec.getBoundingClientRect();
-          const p = Math.max(-1, Math.min(2, 1 - (rect.top + rect.height * 0.5) / (window.innerHeight + rect.height * 0.5)));
-          r1.style.transform = 'translateX(' + (-120 - p * 420) + 'px)';
-          r2.style.transform = 'translateX(' + (-560 + p * 420) + 'px)';
-        });
-      };
-      window.addEventListener('scroll', this._onScroll, { passive: true });
-      this._onScroll();
-    }
   }
   componentWillUnmount() {
     clearInterval(this._tick);
@@ -435,15 +495,34 @@ class Component extends DCLogic {
     return files.map((f, i) => ({ src: base + f, alt: 'Arts Fiesta 2025 — performance and audience moment ' + (i + 1) }));
   }
 
+  _floorplanVals() {
+    const zones = {
+      stage: { title: 'MAIN STAGE', text: 'Live sets from 2:00 PM to 8:00 PM — Bands, Wind Ensemble × Chamber Ensemble, Vocomotives, Ballroom Dancing, Chinese Orchestra, Drama and Dance DerivativeZ.' },
+      photobooth: { title: 'PHOTOBOOTH', text: 'Photographic Circle\u2019s walk-in portrait session — photographed by club members, with an instantly printed photostrip for a small fee.' },
+      booths: { title: 'CLUB BOOTHS', text: 'Writer\u2019s Block literary playground, Chinese Orchestra showcase, DDZ merch, SUTDio\u2019s IsTrue(human) exhibition, Visual Arts merchandise and Bands instrument try-outs.' },
+      workshop: { title: 'WORKSHOP ROOM', text: 'Visual Arts Club\u2019s Shrink Dink Keychain Workshop (two slots) and Drama Club\u2019s theatre and improvisation workshop.' },
+      holding: { title: 'HOLDING AREA · OUT OF BOUND', text: 'Performer preparation space — out of bound to guests.' },
+      eventholding: { title: 'CONNECTOR', text: 'Circulation space linking the workshop room, holding area, main event hall and entrance — no gaps between rooms.' },
+      ingress: { title: 'ENTRANCE', text: 'Enter here — greeted by club booths on the way into the hall.' }
+    };
+    const z = this.state.fpZone;
+    const vals = { fpTitle: z ? zones[z].title : 'HOVER A ZONE', fpText: z ? zones[z].text : 'Move over the stage, booths, photobooth or workshop room to see what happens there.', fpActive: !!z };
+    Object.keys(zones).forEach((k) => {
+      const K = k.charAt(0).toUpperCase() + k.slice(1);
+      vals['fpEnter' + K] = () => this.setState({ fpZone: k });
+      vals['fpOp' + K] = (z === null || z === k) ? 1 : 0.35;
+    });
+    vals.fpLeave = () => this.setState({ fpZone: null });
+    return vals;
+  }
   renderVals() {
     const COUNTDOWN_START = Date.parse('2026-08-31T23:59:00+08:00');
     const EVENT_START = Date.parse('2026-10-02T14:00:00+08:00');
     const now = this.state.now;
-    let label, target, frozen = false;
-    if (now < COUNTDOWN_START) { label = 'THE LIGHT APPEARS IN'; target = COUNTDOWN_START; }
-    else if (now < EVENT_START) { label = 'THE LIGHT ARRIVES IN'; target = EVENT_START; }
-    else { label = 'THE LIGHT IS ON'; target = now; frozen = true; }
-    const diff = frozen ? 0 : Math.max(0, target - now);
+    let label, frozen = false;
+    if (now < EVENT_START) { label = 'THE LIGHT ARRIVES IN'; }
+    else { label = 'THE LIGHT IS ON'; frozen = true; }
+    const diff = frozen ? 0 : Math.max(0, EVENT_START - now);
     const pad = (n) => String(n).padStart(2, '0');
     const cdDays = pad(Math.floor(diff / 86400000));
     const cdHours = pad(Math.floor(diff / 3600000) % 24);
@@ -476,18 +555,18 @@ class Component extends DCLogic {
     };
 
     const clubData = [
-      { name: 'Vocomotives Club', glyph: glyphs.mic, tags: ['Performance'], desc: 'A vocal ensemble bringing contemporary favourites to life through layered voices and stage presence.' },
-      { name: 'Ballroom Dancing Club', glyph: glyphs.waltz, tags: ['Performance'], desc: 'Partnered dance in polished ballroom styles, moving from dramatic tango to sweeping Viennese waltz.' },
-      { name: 'Wind Ensemble Club', glyph: glyphs.horn, tags: ['Performance'], desc: 'A concert wind ensemble performing cinematic, jazz and contemporary repertoire with scale and colour.' },
-      { name: 'Chamber Ensemble Club', glyph: glyphs.violin, tags: ['Performance'], desc: 'Small-ensemble musicians creating intimate, detail-rich performances across classical and contemporary works.' },
-      { name: 'Chinese Orchestra Club', glyph: glyphs.erhu, tags: ['Performance','Booth'], desc: 'Chinese orchestral music blending traditional instruments, familiar melodies and percussion-led energy.' },
-      { name: 'Dance DerivativeZ Club', glyph: glyphs.bolt, tags: ['Performance','Booth'], desc: 'A high-energy dance crew translating contemporary tracks into sharp, expressive choreography.' },
-      { name: 'Bands Club', glyph: glyphs.guitar, tags: ['Performance','Booth'], desc: 'Student bands spanning pop, rock, alternative and indie sounds across eight live sets.' },
-      { name: 'Drama Club', glyph: glyphs.mask, tags: ['Workshop','Performance'], desc: 'Theatre-makers building live stories through performance, improvisation and collaborative play.' },
-      { name: 'Visual Arts Club', glyph: glyphs.brush, tags: ['Workshop','Booth'], desc: 'A visual art community for drawing, making, experimentation and hands-on creative work.' },
-      { name: 'SUTDio Club', glyph: glyphs.film, tags: ['Booth'], desc: 'An interdisciplinary art collective exploring human experience through physical works and interactive installations.' },
-      { name: "Writer's Block", glyph: glyphs.nib, tags: ['Booth'], desc: 'A home for student writers, readers and playful literary encounters.' },
-      { name: 'Photogcircle', glyph: glyphs.camera, tags: ['Booth'], desc: 'A photography community capturing people, performances and shared moments through image-making.' }
+      { name: 'Vocomotives Club', ig: 'https://www.instagram.com/sutdvocomotives/', tags: ['Performance'], desc: 'A vocal ensemble bringing contemporary favourites to life through layered voices and stage presence.' },
+      { name: 'Ballroom Dancing Club', ig: 'https://www.instagram.com/sutdballroom/', tags: ['Performance'], desc: 'Partnered dance in polished ballroom styles, moving from dramatic tango to sweeping Viennese waltz.' },
+      { name: 'Wind Ensemble Club', ig: 'https://www.instagram.com/sutd_winds/', tags: ['Performance'], desc: 'A concert wind ensemble performing cinematic, jazz and contemporary repertoire with scale and colour.' },
+      { name: 'Chamber Ensemble Club', ig: 'https://www.instagram.com/sutdchamber/', tags: ['Performance'], desc: 'Small-ensemble musicians creating intimate, detail-rich performances across classical and contemporary works.' },
+      { name: 'Chinese Orchestra Club', ig: 'https://www.instagram.com/sutdco/?hl=en', tags: ['Performance','Booth'], desc: 'Chinese orchestral music blending traditional instruments, familiar melodies and percussion-led energy.' },
+      { name: 'Dance DerivativeZ Club', ig: 'https://www.instagram.com/sutd_ddz/', tags: ['Performance','Booth'], desc: 'A high-energy dance crew translating contemporary tracks into sharp, expressive choreography.' },
+      { name: 'Bands Club', ig: 'https://www.instagram.com/sutdbands/', tags: ['Performance','Booth'], desc: 'Student bands spanning pop, rock, alternative and indie sounds across eight live sets.' },
+      { name: 'Drama Club', ig: 'https://www.instagram.com/sutddrama/', tags: ['Workshop','Performance'], desc: 'Theatre-makers building live stories through performance, improvisation and collaborative play.' },
+      { name: 'Visual Arts Club', ig: 'https://www.instagram.com/sutd.vac/', tags: ['Workshop','Booth'], desc: 'A visual art community for drawing, making, experimentation and hands-on creative work.' },
+      { name: 'SUTDio Club', ig: 'https://www.instagram.com/sutd.io/', tags: ['Booth'], desc: 'An interdisciplinary art collective exploring human experience through physical works and interactive installations.' },
+      { name: "Writer's Block", ig: 'https://www.instagram.com/sutdwritersblock?igsh=MW4zeWFoeDN5OTlqbA==', tags: ['Booth'], desc: 'A home for student writers, readers and playful literary encounters.' },
+      { name: 'Photographic Circle', ig: 'https://www.instagram.com/sutd_photogcircle/', tags: ['Booth'], desc: 'A photography community capturing people, performances and shared moments through image-making.' }
     ];
     const tagStyle = (t) => t === 'Performance'
       ? { label: t.toUpperCase(), color: '#D7CBB1', border: 'rgba(215,203,177,0.35)' }
@@ -552,7 +631,7 @@ class Component extends DCLogic {
       { ...bStyle, club: 'CHINESE ORCHESTRA CLUB', glyph: glyphs.erhu, title: 'Club Showcase and Merchandise', desc: 'Meet the club, discover its work and browse Chinese Orchestra T-shirts, stickers, prints, postcards and keychains.', note: false },
       { ...bStyle, club: 'DANCE DERIVATIVEZ CLUB', glyph: glyphs.bolt, title: 'Dance Showcase Booth', desc: 'Discover DDZ through club visuals and browse merchandise from past productions and Arts Fiesta.', note: false },
       { ...bStyle, club: 'SUTDIO CLUB', glyph: glyphs.robot, title: 'IsTrue(human)', desc: 'Explore an exhibition about humanity in an age of automation through small artworks, creative journals, physical inspirations and a public interactive artwork.', note: 'Emotion, intuition, imperfection and presence: the things that cannot be computed.' },
-      { ...bStyle, club: 'PHOTOGCIRCLE', glyph: glyphs.photostrip, title: 'Walk-in Photobooth', desc: 'Step into a walk-in portrait session, have your photograph taken by club members and take home an instantly printed photostrip for a small fee.', note: false },
+      { ...bStyle, club: 'PHOTOGRAPHIC CIRCLE', glyph: glyphs.photostrip, title: 'Walk-in Photobooth', desc: 'Step into a walk-in portrait session, have your photograph taken by club members and take home an instantly printed photostrip for a small fee.', note: false },
       { ...bStyle, club: 'VISUAL ARTS CLUB', glyph: glyphs.shirt, title: 'Art Merchandise', desc: 'Browse club-made sketchbooks, T-shirts, stickers and other visual-art merchandise.', note: false },
       { ...bStyle, club: 'BANDS CLUB', glyph: glyphs.drum, title: 'Instrument Try-outs and Showcase', desc: 'Try electric and bass guitars, amplifiers and a compact drum setup, watch clips from past club events and browse Bands merchandise.', note: false }
     ];
@@ -566,25 +645,17 @@ class Component extends DCLogic {
         { href: '#clubs', label: 'Find the Makers' },
         { href: '#programme', label: 'Programme' },
         { href: '#things-to-do', label: 'Things to Do' }
-      ].map((n, i) => ({
-        ...n,
-        labelText: n.label.toUpperCase(),
-        enter: () => this.setState({ hoverNav: i }),
-        leave: () => this.setState({ hoverNav: null }),
-        labelOpacity: this.state.hoverNav === i ? 1 : 0,
-        labelShift: this.state.hoverNav === i ? '0px' : '8px',
-        dotBg: this.state.hoverNav === i ? '#F3E2D5' : 'rgba(27,27,29,0.6)'
-      })),
+      ].map((n) => ({ ...n, labelText: n.label.toUpperCase() })),
       countdownLabel: label, cdDays, cdHours, cdMins, cdSecs,
-      photosRow1: photos.slice(0, 6),
-      photosRow2: photos.slice(6),
+      photosAll: photos,
       lightboxOpen,
       lightboxImg: lightboxOpen ? React.createElement('img', { src: cur.src, alt: cur.alt, style: { maxWidth: '100%', maxHeight: '78vh', borderRadius: '6px', border: '1px solid rgba(215,203,177,0.2)' } }) : null,
       lightboxCaption: lightboxOpen ? 'Arts Fiesta 2025 · photo ' + (lb + 1) + ' of ' + this._photos.length : '',
       closeLightbox: () => this.setState({ lightbox: -1 }),
       nextPhoto: () => this._step(1),
       prevPhoto: () => this._step(-1),
-      filters, clubs, programme, activities
+      filters, clubs, programme, activities,
+      ...this._floorplanVals()
     };
   }
 }
